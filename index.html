@@ -212,7 +212,7 @@ a{color:var(--gold2)}
 .plan-wrap{display:grid; grid-template-columns:1fr 260px; gap:18px}
 .plan-col{min-width:0; container-type:inline-size}
 .plan-area{position:relative; aspect-ratio:16/10; min-height:380px; border:2px solid rgba(45,154,95,.25); border-radius:14px; overflow:hidden;
-  --tblR:32px; --tblFw:44px; --tblFh:18px;
+  --tblR:25px; --tblFw:34px; --tblFh:14px;
   background:
     radial-gradient(circle at 18% 82%, rgba(255,255,255,.03) 0 14px, transparent 15px),
     radial-gradient(circle at 62% 30%, rgba(255,255,255,.02) 0 12px, transparent 13px),
@@ -223,7 +223,7 @@ a{color:var(--gold2)}
   background:
     linear-gradient(180deg, rgba(255,255,255,.4) 0%, rgba(255,255,255,0) 30%),
     linear-gradient(180deg,#ffe9ae 0%,#f4d37f 38%,#dfae3f 72%,#b98a1e 100%);
-  color:#3a2a08; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;
+  color:#3a2a08; display:flex; align-items:center; justify-content:flex-start; gap:8px; padding-left:24px; cursor:pointer;
   font-weight:900; font-size:13px; letter-spacing:2px; text-shadow:0 1px 0 rgba(255,255,255,.45);
   box-shadow:0 0 20px rgba(242,207,122,.5), 0 8px 18px rgba(0,0,0,.35), inset 0 0 26px rgba(255,255,255,.28);
   animation:stageGlow 3.2s ease-in-out infinite; z-index:3}
@@ -242,10 +242,10 @@ a{color:var(--gold2)}
   clip-path:polygon(18% 0, 82% 0, 100% 100%, 0 100%)}
 .plan-spot.l{left:32%; transform:rotate(11deg); transform-origin:top}
 .plan-spot.r{right:32%; transform:rotate(-11deg); transform-origin:top}
-.plan-path{position:absolute; top:14%; left:50%; transform:translateX(-50%); width:5px; height:34%; background:repeating-linear-gradient(180deg,var(--gold) 0 10px,transparent 10px 18px); opacity:.5}
-.plan-floor{position:absolute; left:50%; top:52%; transform:translate(-50%,-50%); width:24%; height:32%; border:2px dashed rgba(212,181,116,.4); border-radius:50%; background:rgba(212,181,116,.05)}
+.plan-path{display:none}
+.plan-floor{position:absolute; left:50%; top:15.7%; transform:translateX(-50%); width:28%; height:27%; border:2px dashed rgba(212,181,116,.4); border-radius:50%; background:rgba(212,181,116,.05)}
 .plan-label{position:absolute; font-size:11px; font-weight:700; color:rgba(212,181,116,.75); letter-spacing:.6px; text-transform:uppercase}
-.plan-label.floor-l{top:56.5%; left:50%; transform:translateX(-50%)}
+.plan-label.floor-l{top:27.2%; left:50%; transform:translateX(-50%)}
 .plan-label.garden-l{bottom:4%; left:2.5%; color:rgba(100,170,120,.6)}
 .plan-border{position:absolute; inset:2%; border:2px dashed rgba(100,160,120,.35); border-radius:10px; pointer-events:none}
 .tbl{position:absolute; z-index:2; display:flex; align-items:center; justify-content:center; flex-direction:column; cursor:grab; touch-action:none; box-shadow:0 4px 12px rgba(0,0,0,.5); transition:box-shadow .15s}
@@ -266,8 +266,13 @@ a{color:var(--gold2)}
 .panel .row:last-child{border-bottom:none}
 .panel .row b{color:var(--ink)}
 .plan-btns{display:flex; flex-direction:column; gap:8px}
-#fsBtn{margin-bottom:4px}
 .plan-note{font-size:11.5px; color:var(--muted); line-height:1.5}
+.plan-add-dock{position:absolute; left:3%; top:19%; z-index:8; width:190px; padding:10px; border:1px solid rgba(212,181,116,.52); border-radius:12px; background:rgba(12,33,23,.92); box-shadow:0 8px 22px rgba(0,0,0,.28); color:#f7edce}
+.plan-add-dock label{display:block; margin-bottom:7px; font-size:10px; font-weight:800; letter-spacing:.75px; text-transform:uppercase; color:#e8c66a}
+.plan-add-fields{display:grid; grid-template-columns:1fr 54px; gap:6px; margin-bottom:7px}
+.plan-add-dock select,.plan-add-dock input{width:100%; min-width:0; height:31px; border:1px solid rgba(232,197,109,.45); border-radius:7px; background:#173d2a; color:#fff; font:600 11px 'Inter',sans-serif; padding:0 7px; outline:none}
+.plan-add-dock input{text-align:center; padding:0 2px}
+.plan-add-dock .btn{width:100%; min-height:33px; padding:7px 9px; font-size:11px; border-radius:8px}
 .save-bar{position:sticky; bottom:0; background:linear-gradient(180deg,rgba(255,255,255,.96),var(--card)); border-top:1px solid var(--line); padding:14px 20px; display:flex; justify-content:space-between; gap:10px; border-radius:0 0 22px 22px; backdrop-filter:blur(8px)}
 
 /* ---------- Masa ekleme butonları ---------- */
@@ -401,13 +406,15 @@ a{color:var(--gold2)}
   .features{grid-template-columns:1fr 1fr}
   .det-grid{grid-template-columns:1fr}
   @media (orientation:landscape){
-    #ovPlan.plan-fullscreen .plan-area{--tblR:28px; --tblFw:38px; --tblFh:16px}
+    #ovPlan.plan-fullscreen .plan-area{--tblR:23px; --tblFw:31px; --tblFh:13px}
   }
 }
 @media (max-width:480px){
   .features{grid-template-columns:1fr}
   .quick-add{flex-direction:column}
   .quick-add .btn{width:100%; text-align:center}
+  .plan-add-dock{left:2.5%; top:19%; width:168px; padding:8px}
+  .plan-add-fields{grid-template-columns:1fr 46px}
   #ovPlan .ov-card.wide{max-height:96vh}
 }
 </style>
@@ -739,12 +746,6 @@ a{color:var(--gold2)}
       <div class="plan-wrap">
         <div class="plan-col">
           <div class="plan-area interactive" id="planArea"></div>
-          <div class="quick-add">
-            <button class="btn green sm js-add-round">+ 🟡 Misafir Masası (10 kişi)</button>
-            <button class="btn green sm js-add-family">+ 🟢 Aile Masası (8 kişi)</button>
-            <button class="btn ghost sm" id="autoArrange2">🔄 Otomatik Yerleştir</button>
-            <button class="btn ghost sm" id="resetTables2">🗑️ Sıfırla</button>
-          </div>
           <p class="plan-note" style="margin-top:10px">🖱️ Masaları sürükleyerek yerleştirin · ⭐ <b style="color:var(--gold2)">SAHNE'ye dokununca kroki tam ekran açılır</b> (telefonda yatay mod) · 🟡 Yuvarlak = misafir (10 kişilik) · 🟢 Dikdörtgen = aile (8 kişilik).</p>
         </div>
         <div class="plan-side">
@@ -756,9 +757,6 @@ a{color:var(--gold2)}
             <div class="row"><span>Beklenen misafir</span><b id="expectedGuest">0</b></div>
           </div>
           <div class="plan-btns">
-            <button class="btn gold sm" id="fsBtn">⛶ Tam Ekran Kroki</button>
-            <button class="btn green sm js-add-round" id="addRound">+ Yuvarlak Masa (10 kişi)</button>
-            <button class="btn green sm js-add-family" id="addFamily">+ Aile Masası (8 kişi)</button>
             <button class="btn ghost sm" id="autoArrange">🔄 Otomatik Yerleştir</button>
             <button class="btn ghost sm" id="resetTables">🗑️ Sıfırla</button>
           </div>
@@ -1005,20 +1003,9 @@ function renderCalendar(){
   $('#calMonthTitle').textContent = MONTHS_TR[m] + ' ' + y;
   const grid = $('#calGrid');
   grid.innerHTML = '';
-  const firstDow = (new Date(y, m, 1).getDay() + 6) % 7;
   const daysInMonth = new Date(y, m + 1, 0).getDate();
-  const daysPrev = new Date(y, m, 0).getDate();
-  const tKey = todayKey();
-  for (let i = 0; i < firstDow; i++){
-    grid.appendChild(dayCell(daysPrev - firstDow + 1 + i, m - 1, true));
-  }
   for (let d = 1; d <= daysInMonth; d++){
     grid.appendChild(dayCell(d, m, false));
-  }
-  const total = firstDow + daysInMonth;
-  const nextCount = (7 - (total % 7)) % 7;
-  for (let i = 1; i <= nextCount; i++){
-    grid.appendChild(dayCell(i, m + 1, true));
   }
 }
 function dayCell(d, m, other){
@@ -1176,8 +1163,8 @@ function autoLayout(tables){
   let W = (r && r.width > 50) ? r.width : Math.min(600, Math.max(320, window.innerWidth - 60));
   let H = (r && r.height > 50) ? r.height : Math.max(Math.round(W * 10 / 16), 340);
   const isMobile = W < 560;
-  const rSize = isMobile ? 26 : 32;
-  const fw = isMobile ? 36 : 44, fh = isMobile ? 15 : 18;
+  const rSize = isMobile ? 20 : 25;
+  const fw = isMobile ? 29 : 34, fh = isMobile ? 12 : 14;
   const rounds = tables.filter(t => t.type === 'round');
   const fams = tables.filter(t => t.type === 'family');
   const pad = Math.max(6, W * 0.015);
@@ -1214,13 +1201,26 @@ function renderPlan(){
   const spotL = document.createElement('div'); spotL.className = 'plan-spot l'; area.appendChild(spotL);
   const spotR = document.createElement('div'); spotR.className = 'plan-spot r'; area.appendChild(spotR);
   const stage = document.createElement('div'); stage.className = 'plan-stage'; stage.title = 'Tam ekran kroki için dokun';
-  stage.innerHTML = 'SAHNE <span class="st-zoom">⛶</span>';
+  stage.innerHTML = '<span class="st-title">SAHNE</span><span class="st-zoom">⛶</span>';
   stage.addEventListener('click', () => togglePlanFullscreen(true));
   area.appendChild(stage);
   const path = document.createElement('div'); path.className = 'plan-path'; area.appendChild(path);
   const floor = document.createElement('div'); floor.className = 'plan-floor'; area.appendChild(floor);
   const lbl1 = document.createElement('div'); lbl1.className = 'plan-label floor-l'; lbl1.textContent = 'Pist'; area.appendChild(lbl1);
   const lbl2 = document.createElement('div'); lbl2.className = 'plan-label garden-l'; lbl2.textContent = 'Kır Bahçesi Alanı'; area.appendChild(lbl2);
+  if (!state.readOnly){
+    const addDock = document.createElement('div');
+    addDock.className = 'plan-add-dock';
+    addDock.innerHTML = '<label>Masa Ekle</label><div class="plan-add-fields"><select aria-label="Masa türü"><option value="round">Misafir · 10 kişi</option><option value="family">Aile · 8 kişi</option></select><input type="number" min="1" max="50" value="1" aria-label="Masa adedi"></div><button type="button" class="btn gold">+ Masaları Piste Ekle</button>';
+    const typeInput = addDock.querySelector('select');
+    const countInput = addDock.querySelector('input');
+    addDock.querySelector('button').addEventListener('click', ev => {
+      ev.stopPropagation();
+      addTables(typeInput.value, countInput.value);
+      countInput.value = '1';
+    });
+    area.appendChild(addDock);
+  }
   state.tables.forEach(t => {
     const el = document.createElement('div');
     el.className = 'tbl ' + t.type;
@@ -1311,20 +1311,20 @@ function makeDraggable(){
     tbl.addEventListener('pointerup', up);
   });
 }
-document.querySelectorAll('.js-add-round').forEach(b => b.addEventListener('click', () => {
-  state.tables.push({ id: 'r' + (tableUid++), type: 'round', x: 40 + Math.random() * 15, y: 30 + Math.random() * 30 });
+function addTables(type, requestedCount){
+  const count = clamp(parseInt(requestedCount, 10) || 1, 1, 50);
+  const prefix = type === 'family' ? 'a' : 'r';
+  for (let i = 0; i < count; i++){
+    state.tables.push({ id: prefix + (tableUid++), type, x: 49, y: 19 });
+  }
   renderPlan();
-}));
-document.querySelectorAll('.js-add-family').forEach(b => b.addEventListener('click', () => {
-  state.tables.push({ id: 'a' + (tableUid++), type: 'family', x: 40 + Math.random() * 15, y: 30 + Math.random() * 30 });
-  renderPlan();
-}));
-$('#fsBtn').addEventListener('click', () => togglePlanFullscreen(true));
+  toast(count + ' ' + (type === 'family' ? 'aile masası' : 'misafir masası') + ' pist üzerinde eklendi.');
+}
+document.querySelectorAll('.js-add-round').forEach(b => b.addEventListener('click', () => addTables('round', 1)));
+document.querySelectorAll('.js-add-family').forEach(b => b.addEventListener('click', () => addTables('family', 1)));
 $('#fsExit').addEventListener('click', () => togglePlanFullscreen(false));
 $('#autoArrange').addEventListener('click', () => { state.tables = autoLayout(state.tables); renderPlan(); });
-$('#autoArrange2').addEventListener('click', () => { state.tables = autoLayout(state.tables); renderPlan(); });
 $('#resetTables').addEventListener('click', () => { state.tables = autoTables(state.info ? state.info.misafir : 150); renderPlan(); });
-$('#resetTables2').addEventListener('click', () => { state.tables = autoTables(state.info ? state.info.misafir : 150); renderPlan(); });
 $('#planBack').addEventListener('click', () => { closePlanOv(); openOv('ovForm'); });
 
 /* ================= Kaydet ================= */
