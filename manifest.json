@@ -1,0 +1,18 @@
+{
+  "name": "Kekik Bahçe Salon Yönetimi",
+  "short_name": "Kekik Bahçe",
+  "description": "Kekik Bahçe Düğün Salonu rezervasyon ve masa planlama paneli.",
+  "start_url": "/kekikbahce-dugun-salonu/?source=pwa",
+  "scope": "/kekikbahce-dugun-salonu/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "any",
+  "background_color": "#f7f5ef",
+  "theme_color": "#1f6a51",
+  "lang": "tr",
+  "dir": "ltr",
+  "icons": [
+    {"src":"/kekikbahce-dugun-salonu/icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"/kekikbahce-dugun-salonu/icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}
