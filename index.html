@@ -269,6 +269,9 @@ a{color:var(--gold2)}
 .plan-note{font-size:11.5px; color:var(--muted); line-height:1.5}
 .plan-add-trigger{justify-content:center; padding-left:0; border:none; font-family:inherit}
 .plan-add-trigger span{position:relative; z-index:2}
+.plan-fs-trigger{position:absolute; top:3%; right:3%; z-index:9; display:flex; align-items:center; gap:6px; border:1px solid rgba(232,197,109,.85); border-radius:9px; background:rgba(12,33,23,.92); color:#fff4cd; padding:8px 10px; font:800 10px 'Inter',sans-serif; letter-spacing:.35px; box-shadow:0 5px 14px rgba(0,0,0,.22)}
+.plan-fs-trigger:hover{background:#1f5138}
+.plan-fs-trigger .fs-mark{font-size:15px; line-height:1}
 .table-add-summary{margin-top:12px; padding:11px 12px; border-radius:10px; background:var(--bg2); color:var(--muted); font-size:12px; line-height:1.55}
 .save-bar{position:sticky; bottom:0; background:linear-gradient(180deg,rgba(255,255,255,.96),var(--card)); border-top:1px solid var(--line); padding:14px 20px; display:flex; justify-content:space-between; gap:10px; border-radius:0 0 22px 22px; backdrop-filter:blur(8px)}
 
@@ -335,6 +338,7 @@ a{color:var(--gold2)}
 #ovPlan.plan-fullscreen .save-bar,
 #ovPlan.plan-fullscreen .plan-note,
 #ovPlan.plan-fullscreen .quick-add{display:none}
+#ovPlan.plan-fullscreen .plan-fs-trigger{display:none}
 #ovPlan.plan-fullscreen .ov-body{flex:1; min-height:0; padding:0; display:flex}
 #ovPlan.plan-fullscreen .plan-wrap{flex:1; display:flex; min-width:0}
 #ovPlan.plan-fullscreen .plan-col{flex:1; display:flex; flex-direction:column; min-width:0}
@@ -411,6 +415,8 @@ a{color:var(--gold2)}
   .quick-add{flex-direction:column}
   .quick-add .btn{width:100%; text-align:center}
   #ovPlan .ov-card.wide{max-height:96vh}
+  .plan-fs-trigger{padding:7px 8px}
+  .plan-fs-trigger .fs-text{display:none}
 }
 </style>
 </head>
@@ -741,7 +747,7 @@ a{color:var(--gold2)}
       <div class="plan-wrap">
         <div class="plan-col">
           <div class="plan-area interactive" id="planArea"></div>
-          <p class="plan-note" style="margin-top:10px">🖱️ Masaları sürükleyerek yerleştirin · ⭐ <b style="color:var(--gold2)">SAHNE'ye dokununca kroki tam ekran açılır</b> (telefonda yatay mod) · 🟡 Yuvarlak = misafir (10 kişilik) · 🟢 Dikdörtgen = aile (8 kişilik).</p>
+          <p class="plan-note" style="margin-top:10px">🖱️ Masaları sürükleyerek yerleştirin · ⛶ <b style="color:var(--gold2)">Geniş Görünüm düğmesine dokununca kroki tam ekran açılır</b> (telefonda yatay mod) · 🟡 Yuvarlak = misafir (10 kişilik) · 🟢 Dikdörtgen = aile (8 kişilik).</p>
         </div>
         <div class="plan-side">
           <div class="panel">
@@ -1230,6 +1236,10 @@ function renderPlan(){
   stage.innerHTML = '<span>+ Masa Ekle</span>';
   stage.addEventListener('click', () => openOv('addTableOverlay'));
   area.appendChild(stage);
+  const fullscreen = document.createElement('button'); fullscreen.type = 'button'; fullscreen.className = 'plan-fs-trigger'; fullscreen.title = 'Krokiyi tam ekran aç';
+  fullscreen.innerHTML = '<span class="fs-mark">⛶</span><span class="fs-text">Geniş Görünüm</span>';
+  fullscreen.addEventListener('click', () => togglePlanFullscreen(true));
+  area.appendChild(fullscreen);
   const path = document.createElement('div'); path.className = 'plan-path'; area.appendChild(path);
   const floor = document.createElement('div'); floor.className = 'plan-floor'; area.appendChild(floor);
   const lbl1 = document.createElement('div'); lbl1.className = 'plan-label floor-l'; lbl1.textContent = 'Pist'; area.appendChild(lbl1);
