@@ -349,6 +349,8 @@ a{color:var(--gold2)}
 /* ---------- Tam ekran kroki ---------- */
 #fsExit{position:fixed; top:14px; right:14px; z-index:700; display:none; background:var(--gold); color:#fff; border:none; padding:10px 18px; border-radius:12px; font-weight:700; font-size:13px; cursor:pointer; box-shadow:0 6px 18px rgba(184,146,42,.35)}
 #fsExit:hover{background:var(--gold2)}
+#fsExit{width:46px; height:46px; padding:0; display:none; align-items:center; justify-content:center; font-size:24px; line-height:1}
+#fsExit:focus-visible,.plan-fs-trigger:focus-visible{outline:3px solid rgba(232,197,109,.9); outline-offset:3px}
 .fs-hint{display:none; position:fixed; bottom:14px; left:50%; transform:translateX(-50%); z-index:420; background:rgba(255,255,255,.95); color:var(--goldDark); padding:10px 20px; border-radius:12px; font-size:12px; font-weight:600; border:1px solid var(--gold); white-space:nowrap; box-shadow:0 4px 12px rgba(44,42,40,.1)}
 
 /* ---------- Tam ekran kroki modu ---------- */
@@ -362,7 +364,7 @@ a{color:var(--gold2)}
 #ovPlan.plan-fullscreen .quick-add{display:none}
 #ovPlan.plan-fullscreen .plan-fs-trigger{display:none}
 /* Keep the masa selection dialog above the CSS fullscreen canvas. */
-#addTableOverlay{z-index:600}
+#addTableOverlay{z-index:2147483000}
 #addTableOverlay .ov-card{max-height:calc(100dvh - 28px)}
 
 #ovPlan.plan-fullscreen .ov-body{flex:1; min-height:0; padding:0; display:flex}
@@ -810,7 +812,7 @@ a{color:var(--gold2)}
     </div>
   </div>
 </div>
-<button class="fs-exit" id="fsExit">✕ Tam Ekrandan Çık</button>
+<button class="fs-exit" id="fsExit" type="button" aria-label="Tam ekrandan çık" title="Tam ekrandan çık">⛶</button>
 <div class="fs-hint" id="fsHint">📱 Telefonu yan çevirin — kroki tam ekranda</div>
 
 <!-- ============ MASA EKLE SEÇİMİ ============ -->
@@ -1269,8 +1271,8 @@ function renderPlan(){
   stage.innerHTML = '<span>+ Masa Ekle</span>';
   stage.addEventListener('click', () => openOv('addTableOverlay'));
   area.appendChild(stage);
-  const fullscreen = document.createElement('button'); fullscreen.type = 'button'; fullscreen.className = 'plan-fs-trigger'; fullscreen.title = 'Krokiyi tam ekran aç';
-  fullscreen.innerHTML = '<span class="fs-mark">⛶</span><span class="fs-text">Geniş Görünüm</span>';
+  const fullscreen = document.createElement('button'); fullscreen.type = 'button'; fullscreen.className = 'plan-fs-trigger'; fullscreen.title = 'Krokiyi tam ekran aç'; fullscreen.setAttribute('aria-label', 'Krokiyi tam ekran aç');
+  fullscreen.innerHTML = '<span class="fs-mark" aria-hidden="true">⛶</span>';
   fullscreen.addEventListener('click', () => togglePlanFullscreen(true));
   area.appendChild(fullscreen);
   const path = document.createElement('div'); path.className = 'plan-path'; area.appendChild(path);
@@ -1300,16 +1302,25 @@ function renderPlan(){
   updateCounts();
   makeDraggable();
 }
-function togglePlanFullscreen(on){
+async function togglePlanFullscreen(on){
   const ov = $('#ovPlan');
-  ov.classList.toggle('plan-fullscreen', !!on);
-  $('#fsExit').style.display = on ? 'flex' : 'none';
   if (on){
+    try{
+      if (!document.fullscreenElement && document.documentElement.requestFullscreen){
+        await document.documentElement.requestFullscreen();
+      }
+    }catch(e){ console.warn('Fullscreen request was rejected; keeping the CSS fallback.', e); }
+    ov.classList.add('plan-fullscreen');
     document.body.classList.add('plan-mode-fullscreen');
-    /* Keep this as a CSS fullscreen layer so Masa Ekle remains usable above it. */
-    try{ if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); }catch(e){}
+    $('#fsExit').style.display = 'flex';
+    $('#fsExit').textContent = '⛶';
+    $('#fsExit').setAttribute('aria-label', 'Tam ekrandan çık');
+    try{ if (screen.orientation && screen.orientation.lock) await screen.orientation.lock('landscape').catch(() => {}); }catch(e){}
   } else {
+    ov.classList.remove('plan-fullscreen');
     document.body.classList.remove('plan-mode-fullscreen');
+    $('#fsExit').style.display = 'none';
+    try{ if (document.fullscreenElement) await document.exitFullscreen(); }catch(e){}
     try{ if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); }catch(e){}
   }
   clearTimeout(fsTmr);
@@ -1319,6 +1330,7 @@ function closePlanOv(){
   $('#ovPlan').classList.remove('open', 'plan-fullscreen');
   document.body.classList.remove('plan-mode-fullscreen');
   $('#fsExit').style.display = 'none';
+  try{ if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); }catch(e){}
   try{ if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); }catch(e){}
 }
 function updateCounts(){
