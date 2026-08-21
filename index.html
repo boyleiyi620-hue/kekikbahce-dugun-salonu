@@ -347,7 +347,7 @@ a{color:var(--gold2)}
 .btn.sm{padding:8px 16px; font-size:12.5px; border-radius:10px}
 
 /* ---------- Tam ekran kroki ---------- */
-#fsExit{position:fixed; top:14px; right:14px; z-index:410; display:none; background:var(--gold); color:#fff; border:none; padding:10px 18px; border-radius:12px; font-weight:700; font-size:13px; cursor:pointer; box-shadow:0 6px 18px rgba(184,146,42,.35)}
+#fsExit{position:fixed; top:14px; right:14px; z-index:700; display:none; background:var(--gold); color:#fff; border:none; padding:10px 18px; border-radius:12px; font-weight:700; font-size:13px; cursor:pointer; box-shadow:0 6px 18px rgba(184,146,42,.35)}
 #fsExit:hover{background:var(--gold2)}
 .fs-hint{display:none; position:fixed; bottom:14px; left:50%; transform:translateX(-50%); z-index:420; background:rgba(255,255,255,.95); color:var(--goldDark); padding:10px 20px; border-radius:12px; font-size:12px; font-weight:600; border:1px solid var(--gold); white-space:nowrap; box-shadow:0 4px 12px rgba(44,42,40,.1)}
 
@@ -361,6 +361,10 @@ a{color:var(--gold2)}
 #ovPlan.plan-fullscreen .plan-note,
 #ovPlan.plan-fullscreen .quick-add{display:none}
 #ovPlan.plan-fullscreen .plan-fs-trigger{display:none}
+/* Keep the masa selection dialog above the CSS fullscreen canvas. */
+#addTableOverlay{z-index:600}
+#addTableOverlay .ov-card{max-height:calc(100dvh - 28px)}
+
 #ovPlan.plan-fullscreen .ov-body{flex:1; min-height:0; padding:0; display:flex}
 #ovPlan.plan-fullscreen .plan-wrap{flex:1; display:flex; min-width:0}
 #ovPlan.plan-fullscreen .plan-col{flex:1; display:flex; flex-direction:column; min-width:0}
@@ -1301,10 +1305,11 @@ function togglePlanFullscreen(on){
   ov.classList.toggle('plan-fullscreen', !!on);
   $('#fsExit').style.display = on ? 'flex' : 'none';
   if (on){
-    try{ if (ov.requestFullscreen) ov.requestFullscreen().catch(() => {}); }catch(e){}
+    document.body.classList.add('plan-mode-fullscreen');
+    /* Keep this as a CSS fullscreen layer so Masa Ekle remains usable above it. */
     try{ if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); }catch(e){}
   } else {
-    try{ if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); }catch(e){}
+    document.body.classList.remove('plan-mode-fullscreen');
     try{ if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); }catch(e){}
   }
   clearTimeout(fsTmr);
@@ -1312,8 +1317,8 @@ function togglePlanFullscreen(on){
 }
 function closePlanOv(){
   $('#ovPlan').classList.remove('open', 'plan-fullscreen');
+  document.body.classList.remove('plan-mode-fullscreen');
   $('#fsExit').style.display = 'none';
-  try{ if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); }catch(e){}
   try{ if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); }catch(e){}
 }
 function updateCounts(){
