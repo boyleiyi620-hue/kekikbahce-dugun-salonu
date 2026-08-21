@@ -267,12 +267,9 @@ a{color:var(--gold2)}
 .panel .row b{color:var(--ink)}
 .plan-btns{display:flex; flex-direction:column; gap:8px}
 .plan-note{font-size:11.5px; color:var(--muted); line-height:1.5}
-.plan-add-dock{position:absolute; left:3%; top:19%; z-index:8; width:190px; padding:10px; border:1px solid rgba(212,181,116,.52); border-radius:12px; background:rgba(12,33,23,.92); box-shadow:0 8px 22px rgba(0,0,0,.28); color:#f7edce}
-.plan-add-dock label{display:block; margin-bottom:7px; font-size:10px; font-weight:800; letter-spacing:.75px; text-transform:uppercase; color:#e8c66a}
-.plan-add-fields{display:grid; grid-template-columns:1fr 54px; gap:6px; margin-bottom:7px}
-.plan-add-dock select,.plan-add-dock input{width:100%; min-width:0; height:31px; border:1px solid rgba(232,197,109,.45); border-radius:7px; background:#173d2a; color:#fff; font:600 11px 'Inter',sans-serif; padding:0 7px; outline:none}
-.plan-add-dock input{text-align:center; padding:0 2px}
-.plan-add-dock .btn{width:100%; min-height:33px; padding:7px 9px; font-size:11px; border-radius:8px}
+.plan-add-trigger{justify-content:center; padding-left:0; border:none; font-family:inherit}
+.plan-add-trigger span{position:relative; z-index:2}
+.table-add-summary{margin-top:12px; padding:11px 12px; border-radius:10px; background:var(--bg2); color:var(--muted); font-size:12px; line-height:1.55}
 .save-bar{position:sticky; bottom:0; background:linear-gradient(180deg,rgba(255,255,255,.96),var(--card)); border-top:1px solid var(--line); padding:14px 20px; display:flex; justify-content:space-between; gap:10px; border-radius:0 0 22px 22px; backdrop-filter:blur(8px)}
 
 /* ---------- Masa ekleme butonları ---------- */
@@ -413,8 +410,6 @@ a{color:var(--gold2)}
   .features{grid-template-columns:1fr}
   .quick-add{flex-direction:column}
   .quick-add .btn{width:100%; text-align:center}
-  .plan-add-dock{left:2.5%; top:19%; width:168px; padding:8px}
-  .plan-add-fields{grid-template-columns:1fr 46px}
   #ovPlan .ov-card.wide{max-height:96vh}
 }
 </style>
@@ -778,6 +773,37 @@ a{color:var(--gold2)}
 </div>
 <button class="fs-exit" id="fsExit">✕ Tam Ekrandan Çık</button>
 <div class="fs-hint" id="fsHint">📱 Telefonu yan çevirin — kroki tam ekranda</div>
+
+<!-- ============ MASA EKLE SEÇİMİ ============ -->
+<div class="overlay" id="addTableOverlay">
+  <div class="ov-card">
+    <div class="ov-head">
+      <div>
+        <h3>Masa Ekle</h3>
+        <div class="sub">Yerleştirilecek masa türünü ve adedini seçin</div>
+      </div>
+      <button class="ov-close" data-close="addTableOverlay">✕</button>
+    </div>
+    <div class="ov-body">
+      <div class="field">
+        <label>Masa Türü</label>
+        <select id="addTableType">
+          <option value="round">Misafir Masası · 10 kişi</option>
+          <option value="family">Aile Masası · 8 kişi</option>
+        </select>
+      </div>
+      <div class="field" style="margin-top:14px">
+        <label>Kaç Masa Eklenecek?</label>
+        <input id="addTableCount" type="number" min="1" max="50" value="1">
+      </div>
+      <p class="table-add-summary">Eklenen masalar pist üzerinde aynı noktada başlar. Dilerseniz sonrasında sürükleyerek ayrı konumlara taşıyabilirsiniz.</p>
+      <div class="form-actions">
+        <button class="btn ghost" data-close="addTableOverlay">Vazgeç</button>
+        <button class="btn gold" id="addTablesConfirm">Masaları Ekle</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ============ REZERVASYON DETAYI ============ -->
 <div class="overlay" id="ovDetail">
@@ -1143,7 +1169,7 @@ $('#formNext').addEventListener('click', () => {
   setInv('fMisafir', !(misafir >= 20 && misafir <= 875));
   if (!ok){ toast('Lütfen işaretli alanları kontrol edin.'); return; }
   state.info = { damat, gelin, tel, saat, misafir, paket, not };
-  state.tables = autoTables(misafir);
+  state.tables = [];
   state.readOnly = false;
   openPlan();
 });
@@ -1200,27 +1226,14 @@ function renderPlan(){
   const bg = document.createElement('div'); bg.className = 'plan-border'; area.appendChild(bg);
   const spotL = document.createElement('div'); spotL.className = 'plan-spot l'; area.appendChild(spotL);
   const spotR = document.createElement('div'); spotR.className = 'plan-spot r'; area.appendChild(spotR);
-  const stage = document.createElement('div'); stage.className = 'plan-stage'; stage.title = 'Tam ekran kroki için dokun';
-  stage.innerHTML = '<span class="st-title">SAHNE</span><span class="st-zoom">⛶</span>';
-  stage.addEventListener('click', () => togglePlanFullscreen(true));
+  const stage = document.createElement('button'); stage.type = 'button'; stage.className = 'plan-stage plan-add-trigger'; stage.title = 'Masa ekleme ekranını aç';
+  stage.innerHTML = '<span>+ Masa Ekle</span>';
+  stage.addEventListener('click', () => openOv('addTableOverlay'));
   area.appendChild(stage);
   const path = document.createElement('div'); path.className = 'plan-path'; area.appendChild(path);
   const floor = document.createElement('div'); floor.className = 'plan-floor'; area.appendChild(floor);
   const lbl1 = document.createElement('div'); lbl1.className = 'plan-label floor-l'; lbl1.textContent = 'Pist'; area.appendChild(lbl1);
   const lbl2 = document.createElement('div'); lbl2.className = 'plan-label garden-l'; lbl2.textContent = 'Kır Bahçesi Alanı'; area.appendChild(lbl2);
-  if (!state.readOnly){
-    const addDock = document.createElement('div');
-    addDock.className = 'plan-add-dock';
-    addDock.innerHTML = '<label>Masa Ekle</label><div class="plan-add-fields"><select aria-label="Masa türü"><option value="round">Misafir · 10 kişi</option><option value="family">Aile · 8 kişi</option></select><input type="number" min="1" max="50" value="1" aria-label="Masa adedi"></div><button type="button" class="btn gold">+ Masaları Piste Ekle</button>';
-    const typeInput = addDock.querySelector('select');
-    const countInput = addDock.querySelector('input');
-    addDock.querySelector('button').addEventListener('click', ev => {
-      ev.stopPropagation();
-      addTables(typeInput.value, countInput.value);
-      countInput.value = '1';
-    });
-    area.appendChild(addDock);
-  }
   state.tables.forEach(t => {
     const el = document.createElement('div');
     el.className = 'tbl ' + t.type;
@@ -1320,11 +1333,16 @@ function addTables(type, requestedCount){
   renderPlan();
   toast(count + ' ' + (type === 'family' ? 'aile masası' : 'misafir masası') + ' pist üzerinde eklendi.');
 }
+$('#addTablesConfirm').addEventListener('click', () => {
+  addTables($('#addTableType').value, $('#addTableCount').value);
+  $('#addTableCount').value = '1';
+  closeOv('addTableOverlay');
+});
 document.querySelectorAll('.js-add-round').forEach(b => b.addEventListener('click', () => addTables('round', 1)));
 document.querySelectorAll('.js-add-family').forEach(b => b.addEventListener('click', () => addTables('family', 1)));
 $('#fsExit').addEventListener('click', () => togglePlanFullscreen(false));
 $('#autoArrange').addEventListener('click', () => { state.tables = autoLayout(state.tables); renderPlan(); });
-$('#resetTables').addEventListener('click', () => { state.tables = autoTables(state.info ? state.info.misafir : 150); renderPlan(); });
+$('#resetTables').addEventListener('click', () => { state.tables = []; renderPlan(); toast('Kroki boşaltıldı.'); });
 $('#planBack').addEventListener('click', () => { closePlanOv(); openOv('ovForm'); });
 
 /* ================= Kaydet ================= */
