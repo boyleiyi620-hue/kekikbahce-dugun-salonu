@@ -1,4 +1,4 @@
-const CACHE_NAME = "kekik-bahce-pwa-v5-auth";
+const CACHE_NAME = "kekik-bahce-pwa-v6-auth";
 const BASE = "/kekikbahce-dugun-salonu/";
 const APP_SHELL = [
   BASE,
@@ -15,9 +15,8 @@ self.addEventListener("install", event => {
 
 self.addEventListener("activate", event => {
   event.waitUntil(
-    caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))))
+    caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 self.addEventListener("fetch", event => {
