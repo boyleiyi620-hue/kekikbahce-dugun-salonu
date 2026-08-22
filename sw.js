@@ -1,4 +1,4 @@
-const CACHE_NAME = "kekik-bahce-pwa-v3";
+const CACHE_NAME = "kekik-bahce-pwa-v4-auth";
 const BASE = "/kekikbahce-dugun-salonu/";
 const APP_SHELL = [
   BASE,
