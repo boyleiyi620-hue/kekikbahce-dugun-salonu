@@ -9,4 +9,4 @@
 - [x] Firestore onSnapshot dinleyicileri ile açık cihazlar arasında gerçek zamanlı güncelleme sağlamak
 - [x] Boş, yükleniyor ve hata durumlarını kullanıcıya anlaşılır şekilde göstermek
 - [x] Firebase Security Rules dokümantasyonunu eklemek
-- [ ] Uygulamayı tarayıcıda doğrulamak ve GitHub deposuna aktarmak
+- [x] Uygulamayı tarayıcıda doğrulamak ve GitHub deposuna aktarmak

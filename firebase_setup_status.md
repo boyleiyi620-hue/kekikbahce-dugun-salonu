@@ -25,3 +25,7 @@ Varsayılan yetkili alan adları `localhost`, `kekikbahce-salon-2026.firebaseapp
 `boyleiyi620-hue.github.io` alan adı Firebase Authentication yetkili alan listesine **Custom** olarak başarıyla eklendi. Böylece canlı GitHub Pages sayfasındaki e-posta/şifre oturumu desteklenir.
 
 Tarayıcıda Firestore dinleyicisinin kullanacağı `setCloudReservations` veri köprüsü tek rezervasyonlu örnek veriyle sınandı; sayfanın ortak rezervasyon durumu bu veriyi `count: 1` ile doğru biçimde aldı. Bu test yalnızca tarayıcı belleğinde çalıştı, Firestore'a test verisi yazılmadı.
+
+GitHub'a `d328ec3` commit'i başarıyla aktarıldı. İlk canlı kontrol sırasında GitHub Pages henüz önceki derlemeyi sundu: sayfada `firebase-sync.js` modülü ve `#authGate` henüz yoktu. Bu beklenen yayın gecikmesi yeniden doğrulanacaktır.
+
+GitHub Pages yayın işi `d328ec3` commit'i için başarıyla tamamlandı. Eski test PWA önbelleği kaldırıldıktan sonra canlı sayfada Firebase giriş ekranı, boş kullanıcıya özel rezervasyon durumu ve `firebase-sync.js` modülü doğrulandı.
